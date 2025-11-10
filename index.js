@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 3000
 
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.2b3737i.mongodb.net/?appName=Cluster0`;
@@ -27,6 +27,44 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect()
+
+        const database = client.db('rentWheelsDB')
+        const carCollections = database.collection('carCollections')
+
+        app.post('/cars', async (req, res) => {
+            const carData = req.body
+            console.log(carData)
+            const result = await carCollections.insertOne(carData)
+            res.send(result)
+
+        })
+
+        //get cars with id
+        app.get('/cars/:id', async (req, res) => {
+            const id = req.params.id;
+        
+            const query = { _id: new ObjectId(id) }
+       
+            const result = await carCollections.findOne(query)
+      
+            res.send(result)
+        })
+
+        app.get('/my-cars', async (req, res) => {
+            const email = req.query.email;
+            const query = {}
+            if (email) {
+                query.provider_email = email;
+
+            }
+
+            const projectFields = { car_name: 1, category: 1, price_per_day: 1, status: 1 }
+
+            const cursor = carCollections.find(query).project(projectFields)
+            const result = await cursor.toArray()
+
+            res.send(result)
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
