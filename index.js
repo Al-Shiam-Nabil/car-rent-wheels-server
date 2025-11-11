@@ -57,6 +57,15 @@ async function run() {
             res.send(result)
         })
 
+
+          // latest 6 car api
+        app.get('/latest-cars',async(req,res)=>{
+            const sortFields={create_at:-1}
+            const cursor=carCollections.find().sort(sortFields).limit(6)
+            const result=await cursor.toArray()
+            res.send(result)
+        })
+
         // car update
 
         app.patch('/cars/:id', async (req, res) => {
@@ -68,6 +77,8 @@ async function run() {
             const result = await carCollections.updateOne(query, update)
             res.send(result)
         })
+
+      
 
         app.delete('/cars/:id', async (req, res) => {
             const id = req.params.id
@@ -92,6 +103,7 @@ async function run() {
             res.send(result)
         })
 
+       
 
 
         // Send a ping to confirm a successful connection
