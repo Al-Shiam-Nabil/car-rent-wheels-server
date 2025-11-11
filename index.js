@@ -39,6 +39,13 @@ async function run() {
 
         })
 
+        //get all cars
+        app.get('/cars',async (req,res)=>{
+            const cursor=carCollections.find()
+            const result=await cursor.toArray()
+            res.send(result)
+        })
+
         //get cars with id
         app.get('/cars/:id', async (req, res) => {
             const id = req.params.id;
