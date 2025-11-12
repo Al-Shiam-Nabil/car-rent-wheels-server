@@ -33,7 +33,6 @@ async function run() {
 
         app.post('/cars', async (req, res) => {
             const carData = req.body
-            console.log(carData)
             const result = await carCollections.insertOne(carData)
             res.send(result)
 
@@ -57,6 +56,17 @@ async function run() {
             res.send(result)
         })
 
+        // search
+        app.get('/search', async (req, res) => {
+            const searchText = req.query.search
+            function escapeRegex(text) {
+                return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            }
+
+            const result = await carCollections.find({ car_name: { $regex: escapeRegex(searchText), $options: 'i' } }).toArray()
+            res.send(result)
+        })
+
 
         // latest 6 car api
         app.get('/latest-cars', async (req, res) => {
@@ -72,7 +82,6 @@ async function run() {
             const id = req.params.id
             const updatedInfo = req.body
             const query = { _id: new ObjectId(id) }
-            console.log(query, updatedInfo)
             const update = { $set: updatedInfo }
             const result = await carCollections.updateOne(query, update)
             res.send(result)
@@ -107,14 +116,8 @@ async function run() {
             const email = req.query.email
             const cursor = carCollections.find({ "booked_user.email": email })
             const result = await cursor.toArray()
-            console.log(result)
             res.send(result)
-
-
         })
-
-
-
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
@@ -125,7 +128,6 @@ async function run() {
 }
 
 run().catch(console.dir);
-
 
 
 app.listen(port, () => {
