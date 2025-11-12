@@ -6,9 +6,9 @@
 
 **Server-side GitHub Repository :** https://github.com/Al-Shiam-Nabil/car-rent-wheels-server
 
-**Live Website Link Client-side :**
+**Live Website Link Client-side :** https://rent-wheels-project-10.netlify.app/
 
-**Live Website Link Server-side :**
+**Live Website Link Server-side :** https://car-rent-wheels-server.vercel.app/
 
 **Project Theme:**
 
