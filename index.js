@@ -40,9 +40,9 @@ async function run() {
         })
 
         //get all cars
-        app.get('/cars',async (req,res)=>{
-            const cursor=carCollections.find()
-            const result=await cursor.toArray()
+        app.get('/cars', async (req, res) => {
+            const cursor = carCollections.find()
+            const result = await cursor.toArray()
             res.send(result)
         })
 
@@ -58,11 +58,11 @@ async function run() {
         })
 
 
-          // latest 6 car api
-        app.get('/latest-cars',async(req,res)=>{
-            const sortFields={create_at:-1}
-            const cursor=carCollections.find().sort(sortFields).limit(6)
-            const result=await cursor.toArray()
+        // latest 6 car api
+        app.get('/latest-cars', async (req, res) => {
+            const sortFields = { create_at: -1 }
+            const cursor = carCollections.find().sort(sortFields).limit(6)
+            const result = await cursor.toArray()
             res.send(result)
         })
 
@@ -78,7 +78,7 @@ async function run() {
             res.send(result)
         })
 
-      
+
 
         app.delete('/cars/:id', async (req, res) => {
             const id = req.params.id
@@ -103,7 +103,17 @@ async function run() {
             res.send(result)
         })
 
-       
+        app.get('/my-bookings', async (req, res) => {
+            const email = req.query.email
+            const cursor = carCollections.find({ "booked_user.email": email })
+            const result = await cursor.toArray()
+            console.log(result)
+            res.send(result)
+
+
+        })
+
+
 
 
         // Send a ping to confirm a successful connection
